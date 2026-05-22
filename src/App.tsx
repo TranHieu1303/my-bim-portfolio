@@ -144,37 +144,28 @@ export default function App() {
     ];
   });
 
-  // ĐÃ CẬP NHẬT: Trỏ trực tiếp đường dẫn tĩnh vào 3 file PDF trong thư mục public
+  // Khởi tạo State cho Chứng Chỉ (LocalStorage)
   const [certificates, setCertificates] = useState<Certificate[]>(() => {
     const saved = localStorage.getItem('hieu_bim_certs');
     if (saved) return JSON.parse(saved);
     return [
       {
-        id: 'cert-revit-arc',
-        title: 'Autodesk Certified Professional: Revit Architecture Design',
+        id: 'cert-revit-pro',
+        title: 'Autodesk Certified Professional: Revit for Structural Design',
         issuer: 'Autodesk Global Certification',
         signedBy: 'VP Autodesk Learning Services (Digital Signature Verified)',
-        status: 'Chứng chỉ quốc tế bộ môn Kiến trúc - Đã xác thực',
+        status: 'Chứng chỉ quốc tế - Đã ký xác thực PDF bảo mật',
         date: 'Năm cấp: 2024',
-        pdfUrl: '/chungchi-revit-arc-autodesk.pdf'
+        pdfUrl: 'https://images.autodesk.com/adsk/files/certified_professional_logo.pdf'
       },
       {
-        id: 'cert-revit-struc',
-        title: 'Autodesk Certified Professional: Revit Structural Design',
-        issuer: 'Autodesk Global Certification',
-        signedBy: 'VP Autodesk Learning Services (Digital Signature Verified)',
-        status: 'Chứng chỉ quốc tế bộ môn Kết cấu - Đã xác thực',
-        date: 'Năm cấp: 2024',
-        pdfUrl: '/chungchi-revit-struc-autodesk.pdf'
-      },
-      {
-        id: 'cert-revit-mep',
-        title: 'Autodesk Certified Professional: Revit MEP Systems Design',
-        issuer: 'Autodesk Global Certification',
-        signedBy: 'VP Autodesk Learning Services (Digital Signature Verified)',
-        status: 'Chứng chỉ quốc tế bộ môn Cơ điện - Đã xác thực',
+        id: 'cert-bim-manager',
+        title: 'BIM Modeler & Coordination Specialist Standard',
+        issuer: 'Viện Công nghệ & Xây dựng Số (BIM Institute)',
+        signedBy: 'Chủ tịch Hội đồng Khoa học (Đã ký số)',
+        status: 'Đạt chuẩn kỹ năng mô hình hóa cấp độ chuyên sâu hành nghề',
         date: 'Năm cấp: 2025',
-        pdfUrl: '/chungchi-revit-mep-autodesk.pdf'
+        pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
       }
     ];
   });
@@ -226,6 +217,7 @@ export default function App() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Thêm đầy đủ hàm bật tắt phát video và âm thanh bị thiếu
   const handleTogglePlay = () => {
     setIsVideoPlaying(!isVideoPlaying);
   };
@@ -279,7 +271,7 @@ export default function App() {
       reader.onloadend = () => {
         setCertForm(prev => ({
           ...prev,
-          pdfUrl: reader.result as string
+          pdfUrl: reader.result as string // Lưu chuỗi Base64
         }));
         alert('Tải lên tệp PDF thành công! Hệ thống đã mã hóa tệp trực tuyến.');
       };
@@ -400,19 +392,23 @@ export default function App() {
       {/* Foreground content */}
       <div className="relative z-10 flex flex-col min-h-screen">
         
-        {/* Navigation Bar */}
+        {/* Navigation Bar - Refined with Top-Left Official Ca Mau Brand Identity */}
         <header className="w-full px-4 sm:px-8 pt-4 sm:pt-6">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             
-            {/* Top-Left Official Brand & Identity Block */}
+            {/* Top-Left Official Brand & Identity Block - Updated with Official Ca Mau Logo */}
             <div className="flex items-center gap-3.5 backdrop-blur-md bg-white/90 p-2.5 sm:p-3 rounded-2xl border border-white/50 shadow-md max-w-sm transition-all duration-300 hover:bg-white/95 hover:shadow-lg">
+              
+              {/* Container for CaMau CPI-KD SVG Logo */}
               <div className="relative shrink-0">
                 <CaMauOfficialLogo />
+                {/* Gold star quality emblem on bottom right */}
                 <div className="absolute -bottom-1 -right-1 w-4.5 h-4.5 bg-amber-500 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
                   <span className="text-[8px] text-white font-extrabold leading-none">★</span>
                 </div>
               </div>
 
+              {/* Precise Professional Typographic Hierarchy */}
               <div className="flex flex-col text-left">
                 <span className="text-[10px] font-extrabold text-red-600 tracking-wider uppercase leading-none">
                   Sở Xây dựng tỉnh Cà Mau
@@ -427,7 +423,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Right Interactive Pill Container */}
+            {/* Right Interactive Pill Container - Custom BIM Navigation */}
             <div className="flex items-center gap-2 self-center md:self-auto">
               <button 
                 onClick={() => setActiveTab(null)}
@@ -470,7 +466,7 @@ export default function App() {
         <main className="flex-1 flex items-end pb-12 sm:pb-16 lg:pb-24 px-6 sm:px-12 md:px-20 lg:px-28">
           <div className="max-w-sm backdrop-blur-md bg-white/75 p-6 rounded-2xl border border-white/30 shadow-xl">
             
-            {/* Nút kiểm tra nhanh chứng chỉ đầu tiên */}
+            {/* 1. Badge Link - Tự động định vị mở Chứng chỉ đầu tiên vừa tải lên */}
             <button 
               onClick={() => {
                 if (certificates.length > 0 && certificates[0].pdfUrl !== '') {
@@ -485,14 +481,17 @@ export default function App() {
               <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">→</span>
             </button>
 
+            {/* 2. Headline */}
             <h1 className="text-[1.5rem] sm:text-[1.75rem] leading-[1.2] font-extrabold text-gray-900 tracking-tight mb-3">
               Mô hình hóa BIM chuẩn xác & Phối hợp Revit chuyên nghiệp.
             </h1>
 
+            {/* 3. Subtext */}
             <p className="text-[13px] text-gray-600 font-medium mb-4 leading-relaxed">
               Kiến tạo các mô hình số hóa 3D thông tin cao (LOD 300 - 500) và kiểm tra xung đột hệ thống hoàn hảo trước khi vận hành thực tế tại công trình.
             </p>
 
+            {/* 4. CTA Button - Trỏ trực tiếp sang trang cá nhân LinkedIn của anh Hiếu */}
             <a 
               href={linkedinUrl}
               target="_blank" 
@@ -506,7 +505,7 @@ export default function App() {
           </div>
         </main>
 
-        {/* Quản trị & Sao lưu dữ liệu */}
+        {/* Subtle Bottom Left Admin Mode & Backup control */}
         <div className="absolute bottom-6 left-6 sm:left-12 flex items-center gap-2 z-20">
           <button 
             onClick={() => {
@@ -521,7 +520,7 @@ export default function App() {
                 ? 'bg-amber-500 text-white border-amber-600 animate-pulse' 
                 : 'bg-white/85 text-gray-700 hover:text-blue-600 hover:bg-white border-gray-200/50'
             }`}
-            title="Chế độ quản trị"
+            title="Chế độ quản trị (Tải lên chứng chỉ mới / Chỉnh sửa nội dung)"
           >
             {isAdminMode ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
             {isAdminMode ? 'Admin Active' : 'Admin'}
@@ -531,7 +530,7 @@ export default function App() {
             <button
               onClick={handleDownloadBackup}
               className="flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-full text-xs font-bold border border-green-700 hover:bg-green-700 transition-all shadow-md"
-              title="Xuất dữ liệu lưu trữ"
+              title="Xuất dữ liệu lưu trữ cấu hình"
             >
               <Download className="w-3.5 h-3.5" />
               Xuất File Data
@@ -562,7 +561,7 @@ export default function App() {
       {activeTab && (
         <div className="absolute inset-0 z-30 flex items-center justify-center p-4 sm:p-6 bg-black/45 backdrop-blur-md transition-opacity duration-300">
           
-          <div className="bg-white rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[85vh] transition-transform duration-300 scale-100">
+          <div className="bg-white rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[85vh] transition-transform duration-300 scale-100 animate-in fade-in zoom-in-95 duration-200">
             
             {/* Modal Header */}
             <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
@@ -572,12 +571,14 @@ export default function App() {
                   {activeTab === 'Projects' && <Layers className="w-5 h-5" />}
                   {activeTab === 'Workflow' && <Box className="w-5 h-5" />}
                   {activeTab === 'Certificates' && <Award className="w-5 h-5" />}
+                  {activeTab === 'consultation' && <Calendar className="w-5 h-5" />}
                 </span>
                 <h3 className="text-base font-bold text-gray-900">
                   {activeTab === 'Profile' && 'Hồ Sơ Năng Lực & Tầm Nhìn'}
                   {activeTab === 'Projects' && 'Dự Án Mô Hình Hóa BIM Thực Chiến'}
                   {activeTab === 'Workflow' && 'Quy Trình Triển Khai Kỹ Thuật'}
                   {activeTab === 'Certificates' && 'Văn Bằng & Chứng Chỉ Đã Ký Số'}
+                  {activeTab === 'consultation' && 'Yêu Cầu Phối Hợp & Hợp Tác Dự Án'}
                 </h3>
               </div>
               <button 
@@ -602,7 +603,7 @@ export default function App() {
                       <Cpu className="w-4 h-4 text-blue-600" /> Triết lý làm việc: Chính Xác & Thực Chiến
                     </h4>
                     <p className="text-xs text-blue-800 leading-relaxed">
-                      Là một viên chức nhà nước hoạt động chuyên môn tại Sở Xây dựng tỉnh Cà Mau, tôi định hướng xây dựng các mô hình số có độ tin cậy kết cấu cao. Sự đồng bộ dữ liệu hình học và phi hình học giúp giảm thiểu tối đa rủi ro sửa chữa tại hiện trường.
+                      Là một BIM Modeler hoạt động chuyên nghiệp tại Sở Xây Dựng & Trung tâm Quy hoạch Kiểm định, tôi định hướng xây dựng các mô hình số có độ tin cậy tuyệt đối. Sự đồng bộ giữa các bộ môn (Kiến trúc - Kết cấu - Hệ thống kỹ thuật) giúp tối ưu hóa chi phí đầu tư, giảm thiểu tối đa rủi ro sửa chữa phát sinh tại hiện trường.
                     </p>
                   </div>
                   
@@ -611,47 +612,95 @@ export default function App() {
                       <div className="absolute -left-[21px] top-1 bg-white border-2 border-blue-500 rounded-full w-2.5 h-2.5" />
                       <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">Mức Độ Chi Tiết Cao</span>
                       <h5 className="text-xs font-semibold text-gray-900 mt-0.5">LOD 300 - LOD 500 Specialist</h5>
-                      <p className="text-xs text-gray-500 mt-0.5">Thiết kế cấu trúc hình học chuẩn hóa, đồng thời tích hợp đầy đủ thông tin phi hình học nhằm hỗ trợ tốt nhất cho công tác chế tạo cấu kiện.</p>
+                      <p className="text-xs text-gray-500 mt-0.5">Thiết kế cấu trúc hình học chuẩn hóa, đồng thời tích hợp đầy đủ dữ liệu phi hình học nhằm hỗ trợ tốt nhất cho công tác chế tạo cấu kiện và quản lý hoàn công vận hành.</p>
+                    </div>
+                    <div className="relative">
+                      <div className="absolute -left-[21px] top-1 bg-white border-2 border-blue-500 rounded-full w-2.5 h-2.5" />
+                      <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">Phối Hợp Thiết Kế</span>
+                      <h5 className="text-xs font-semibold text-gray-900 mt-0.5">Xử Lý Xung Đột & Tránh Va Chạm</h5>
+                      <p className="text-xs text-gray-500 mt-0.5">Sử dụng Navisworks Manage kết hợp Dynamo để tự động hóa các khâu kiểm duyệt xung đột không gian hệ thống kỹ thuật MEP và dầm sàn kết cấu.</p>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* PROJECTS TAB */}
+              {/* PROJECTS TAB - Có tích hợp thêm/sửa/xóa khi bật chế độ Admin */}
               {activeTab === 'Projects' && (
                 <div className="space-y-4">
+                  {/* Form thêm mới/sửa đổi dự án khi có Admin Mode */}
                   {isAdminMode && (
-                    <form onSubmit={handleSaveProject} className="p-4 border border-dashed border-amber-300 rounded-2xl bg-amber-50/50 mb-4 space-y-3">
+                    <form onSubmit={handleSaveProject} className="p-4 border border-dashed border-amber-300 rounded-2xl bg-amber-50/50 mb-4 space-y-3 animate-in slide-in-from-top-4 duration-200">
                       <h4 className="text-xs font-bold text-amber-900 uppercase flex items-center gap-1.5">
-                        <Plus className="w-3.5 h-3.5" /> {projectForm.id ? 'Chỉnh sửa dự án' : 'Thêm mới dự án'}
+                        <Plus className="w-3.5 h-3.5" /> 
+                        {projectForm.id ? 'Chỉnh sửa dự án BIM' : 'Thêm mới dự án BIM'}
                       </h4>
                       <input 
                         type="text"
-                        placeholder="Tên dự án..."
+                        placeholder="Tên dự án/Công trình..."
                         value={projectForm.name}
                         onChange={e => setProjectForm({ ...projectForm, name: e.target.value })}
-                        className="w-full text-xs p-2.5 rounded-lg border border-gray-200 bg-white"
+                        className="w-full text-xs p-2.5 rounded-lg border border-gray-200 outline-none bg-white focus:ring-1 focus:ring-amber-500"
                         required
                       />
                       <textarea 
-                        placeholder="Mô tả kỹ thuật triển khai..."
+                        placeholder="Mô tả kỹ thuật triển khai chi tiết..."
                         value={projectForm.desc}
                         onChange={e => setProjectForm({ ...projectForm, desc: e.target.value })}
-                        className="w-full text-xs p-2.5 rounded-lg border border-gray-200 bg-white h-16 resize-none"
+                        className="w-full text-xs p-2.5 rounded-lg border border-gray-200 outline-none bg-white focus:ring-1 focus:ring-amber-500 h-16 resize-none"
                         required
                       />
+                      <div className="grid grid-cols-2 gap-2">
+                        <select
+                          value={projectForm.category}
+                          onChange={e => setProjectForm({ ...projectForm, category: e.target.value })}
+                          className="text-xs p-2.5 rounded-lg border border-gray-200 bg-white"
+                        >
+                          <option value="Structural BIM">Structural BIM</option>
+                          <option value="Architectural BIM">Architectural BIM</option>
+                          <option value="MEP Integration">MEP Integration</option>
+                          <option value="Parametric Design">Parametric Design</option>
+                        </select>
+                        <select
+                          value={projectForm.lod}
+                          onChange={e => setProjectForm({ ...projectForm, lod: e.target.value })}
+                          className="text-xs p-2.5 rounded-lg border border-gray-200 bg-white"
+                        >
+                          <option value="LOD 300">LOD 300</option>
+                          <option value="LOD 350">LOD 350</option>
+                          <option value="LOD 400">LOD 400</option>
+                          <option value="LOD 500">LOD 500</option>
+                        </select>
+                      </div>
+                      <input 
+                        type="text"
+                        placeholder="Công cụ thiết kế (Cách nhau bởi dấu phẩy, e.g. Revit, Dynamo)"
+                        value={projectForm.tools}
+                        onChange={e => setProjectForm({ ...projectForm, tools: e.target.value })}
+                        className="w-full text-xs p-2.5 rounded-lg border border-gray-200 outline-none bg-white focus:ring-1 focus:ring-amber-500"
+                      />
                       <div className="flex gap-2">
-                        <button type="submit" className="flex-1 bg-amber-600 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1">
+                        <button type="submit" className="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-2 rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer">
                           <Save className="w-3.5 h-3.5" /> Lưu Dự Án
                         </button>
+                        {projectForm.id && (
+                          <button 
+                            type="button" 
+                            onClick={() => setProjectForm({ id: '', name: '', category: 'Structural BIM', desc: '', lod: 'LOD 400', tools: '' })}
+                            className="bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-bold px-3 py-2 rounded-lg"
+                          >
+                            Hủy
+                          </button>
+                        )}
                       </div>
                     </form>
                   )}
 
+                  {/* Danh sách dự án hiện có */}
                   {bimProjects.map((project) => (
-                    <div key={project.id} className="border border-gray-100 rounded-2xl p-4 bg-gray-50/40 relative group">
+                    <div key={project.id} className="border border-gray-100 hover:border-blue-200 rounded-2xl p-4 transition-all bg-gray-50/40 relative group">
+                      {/* Controls của Admin để chỉnh sửa ngay tại chỗ */}
                       {isAdminMode && (
-                        <div className="absolute top-3 right-3 flex gap-1.5">
+                        <div className="absolute top-3 right-3 flex gap-1.5 z-10 opacity-80 group-hover:opacity-100 transition-opacity">
                           <button 
                             onClick={() => setProjectForm({
                               id: project.id,
@@ -661,22 +710,28 @@ export default function App() {
                               lod: project.lod,
                               tools: project.tools.join(', ')
                             })}
-                            className="p-1 rounded bg-blue-50 text-blue-600"
+                            className="p-1 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
                           </button>
-                          <button onClick={() => handleDeleteProject(project.id)} className="p-1 rounded bg-red-50 text-red-600">
+                          <button 
+                            onClick={() => handleDeleteProject(project.id)}
+                            className="p-1 rounded bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                          >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       )}
-                      <span className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">{project.category}</span>
-                      <h4 className="text-sm font-bold text-gray-900 mt-1.5">{project.name}</h4>
-                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">{project.desc}</p>
-                      <div className="mt-3 flex flex-wrap gap-1.5 items-center">
-                        <span className="text-[10px] font-extrabold bg-gray-900 text-white px-2 py-0.5 rounded">{project.lod}</span>
-                        {project.tools.map((t, idx) => (
-                          <span key={idx} className="text-[10px] font-medium bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{t}</span>
+
+                      <div className="flex justify-between items-start mb-1.5">
+                        <h4 className="text-sm font-bold text-gray-900 pr-16">{project.name}</h4>
+                        <span className="text-[10px] font-bold bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full shrink-0">{project.lod}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mb-2 leading-relaxed">{project.desc}</p>
+                      
+                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-gray-100">
+                        {project.tools.map((tool, i) => (
+                          <span key={i} className="text-[10px] bg-gray-200/50 text-gray-600 px-2 py-0.5 rounded-md font-mono">{tool}</span>
                         ))}
                       </div>
                     </div>
@@ -686,119 +741,394 @@ export default function App() {
 
               {/* WORKFLOW TAB */}
               {activeTab === 'Workflow' && (
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {[
-                    { step: 1, name: 'Thu thập cấu trúc & Khảo sát Chênh cốt', detail: 'Đánh giá hồ sơ hiện trạng, cao độ dầm sàn kết cấu và thiết lập lưới trục dự án.' },
-                    { step: 2, name: 'Mô hình hóa chi tiết cấu kiện (LOD 350+)', detail: 'Phân chia các lớp Layer, thiết lập tham số Family và dựng hình chuẩn xác theo bộ môn.' },
-                    { step: 3, name: 'Kiểm tra va chạm & Xuất hồ sơ Shop Drawing', detail: 'Chạy ma trận xung đột không gian thông qua Navisworks và trích xuất dữ liệu.' }
-                  ].map((item) => (
-                    <div 
-                      key={item.step}
-                      onClick={() => setActiveWorkflowStep(activeWorkflowStep === item.step ? null : item.step)}
-                      className="p-3.5 border border-gray-100 rounded-2xl bg-gray-50/50 cursor-pointer hover:border-blue-100 transition-all"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <span className="w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">{item.step}</span>
-                          <span className="text-xs font-bold text-gray-800">{item.name}</span>
+                    {
+                      q: "Bước 1: Tiếp nhận thông tin & Lập kế hoạch BIM (BEP)",
+                      a: "Thu thập hồ sơ thiết kế cơ sở 2D hoặc tệp tin khảo sát hiện trạng, thống nhất Kế hoạch thực hiện BIM (BEP), hệ tọa độ gốc dự án và tiêu chuẩn đặt tên cấu kiện."
+                    },
+                    {
+                      q: "Bước 2: Xây dựng mô hình 3D đa bộ môn (Revit)",
+                      a: "Triển khai dựng hình chuẩn xác cấu trúc Kiến trúc, Kết cấu dầm sàn móng, thép chịu lực và các đường ống kỹ thuật MEP tùy thuộc vào cấp độ LOD được phê duyệt."
+                    },
+                    {
+                      q: "Bước 3: Phát hiện xung đột & Họp phối hợp (Navisworks)",
+                      a: "Tổng hợp các mô hình thành phần, tiến hành kiểm tra xung đột vật lý bằng Navisworks Manage và lập báo cáo va chạm chi tiết đề xuất giải pháp xử lý kỹ thuật."
+                    },
+                    {
+                      q: "Bước 4: Trích xuất bản vẽ thi công Shop Drawing & BOQ",
+                      a: "Kết xuất bộ bản vẽ kỹ thuật chi tiết từ mô hình 3D đồng nhất, hỗ trợ bốc tách tiên lượng khối lượng vật tư xây dựng chuẩn xác phục vụ đấu thầu và thi công."
+                    }
+                  ].map((step, i) => (
+                    <div key={i} className="border border-gray-100 rounded-2xl overflow-hidden">
+                      <button 
+                        onClick={() => setActiveWorkflowStep(activeWorkflowStep === i ? null : i)}
+                        className="w-full text-left p-4 bg-gray-50/50 hover:bg-gray-50 transition-colors flex justify-between items-center"
+                      >
+                        <span className="text-xs font-semibold text-gray-800">{step.q}</span>
+                        <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${activeWorkflowStep === i ? 'rotate-90' : ''}`} />
+                      </button>
+                      {activeWorkflowStep === i && (
+                        <div className="p-4 bg-white border-t border-gray-50 text-xs text-gray-500 leading-relaxed">
+                          {step.a}
                         </div>
-                        <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${activeWorkflowStep === item.step ? 'rotate-90 text-blue-600' : ''}`} />
-                      </div>
-                      {activeWorkflowStep === item.step && (
-                        <p className="text-[11.5px] text-gray-500 mt-2 pl-8 border-l border-blue-500/30 ml-3 animate-in fade-in duration-150">{item.detail}</p>
                       )}
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* CERTIFICATES TAB */}
+              {/* CERTIFICATES TAB - Tải trực tiếp tệp PDF từ máy tính của anh */}
               {activeTab === 'Certificates' && (
                 <div className="space-y-4">
+                  
+                  {/* Cấu hình chung liên kết LinkedIn (Chỉ dành cho Admin) */}
                   {isAdminMode && (
-                    <form onSubmit={handleSaveCert} className="p-4 border border-dashed border-amber-300 rounded-2xl bg-amber-50/50 mb-4 space-y-3">
-                      <h4 className="text-xs font-bold text-amber-900 uppercase flex items-center gap-1.5"><Plus className="w-3.5 h-3.5" /> Thêm văn bằng chứng chỉ</h4>
+                    <div className="p-4 border border-dashed border-blue-200 rounded-2xl bg-blue-50/30 mb-2 space-y-2">
+                      <h4 className="text-xs font-bold text-blue-900 uppercase flex items-center gap-1.5">
+                        <Link className="w-3.5 h-3.5 text-blue-600" /> Cấu hình liên kết LinkedIn cá nhân
+                      </h4>
                       <input 
-                        type="text" 
-                        placeholder="Tên chứng chỉ..." 
-                        value={certForm.title} 
-                        onChange={e => setCertForm({ ...certForm, title: e.target.value })} 
-                        className="w-full text-xs p-2.5 rounded-lg border border-gray-200 bg-white" 
-                        required 
+                        type="url"
+                        placeholder="Dán link LinkedIn của anh tại đây..."
+                        value={linkedinUrl}
+                        onChange={e => setLinkedinUrl(e.target.value)}
+                        className="w-full text-xs p-2.5 rounded-lg border border-blue-200 outline-none focus:ring-1 focus:ring-blue-500 font-mono"
                       />
+                      <p className="text-[10px] text-gray-400">
+                        * Nút bấm chính "Yêu cầu tư vấn..." ngoài màn hình chính sẽ tự hướng thẳng sang link LinkedIn này.
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="p-4 bg-green-50/50 rounded-2xl border border-green-100 flex items-start gap-3">
+                    <FileCheck className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-xs font-bold text-green-900">Tính Xác Thực Pháp Lý Cao</h4>
+                      <p className="text-xs text-green-700 leading-relaxed mt-0.5">
+                        Tất cả các chứng chỉ dưới đây đều đã được ký số mã hóa trực tiếp trên tệp PDF gốc, đáp ứng đầy đủ tiêu chuẩn năng lực hoạt động trong môi trường số chuyên ngành xây dựng.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Form để Admin chọn tải tệp PDF trực tiếp hoặc dán link */}
+                  {isAdminMode && (
+                    <form onSubmit={handleSaveCert} className="p-4 border border-dashed border-amber-300 rounded-2xl bg-amber-50/50 mb-4 space-y-3 animate-in slide-in-from-top-4 duration-200">
+                      <h4 className="text-xs font-bold text-amber-900 uppercase flex items-center gap-1.5">
+                        <Plus className="w-3.5 h-3.5" /> 
+                        {certForm.id ? 'Sửa văn bằng chứng chỉ' : 'Tải lên chứng chỉ mới'}
+                      </h4>
+                      
+                      {/* Upload File PDF Trực Tiếp từ thiết bị */}
+                      <div className="p-3 bg-white rounded-xl border border-gray-100 space-y-2">
+                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                          Tải tệp PDF từ máy tính của anh
+                        </label>
+                        <input 
+                          type="file" 
+                          accept="application/pdf"
+                          onChange={handlePdfFileChange}
+                          className="w-full text-xs cursor-pointer file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        />
+                      </div>
+
+                      <div className="text-center text-gray-400 text-[10px] font-bold">HOẶC</div>
+
+                      {/* Nhập URL thủ công (Dành cho Google Drive, Dropbox khi tệp nặng) */}
                       <input 
-                        type="file" 
-                        accept="application/pdf" 
-                        onChange={handlePdfFileChange} 
-                        className="w-full text-xs" 
+                        type="text"
+                        placeholder="Dán đường dẫn tệp PDF trực tuyến (nếu không chọn file)..."
+                        value={certForm.pdfUrl}
+                        onChange={e => setCertForm({ ...certForm, pdfUrl: e.target.value })}
+                        className="w-full text-xs p-2.5 rounded-lg border border-gray-200 outline-none bg-white focus:ring-1 focus:ring-amber-500 font-mono text-blue-600"
                       />
-                      <button type="submit" className="w-full bg-amber-600 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1">
-                        <Save className="w-3.5 h-3.5" /> Lưu cấu hình chứng chỉ
-                      </button>
+
+                      <input 
+                        type="text"
+                        placeholder="Tiêu đề chứng chỉ (ví dụ: Revit Professional...)"
+                        value={certForm.title}
+                        onChange={e => setCertForm({ ...certForm, title: e.target.value })}
+                        className="w-full text-xs p-2.5 rounded-lg border border-gray-200 outline-none bg-white focus:ring-1 focus:ring-amber-500"
+                        required
+                      />
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <input 
+                          type="text"
+                          placeholder="Cơ quan cấp..."
+                          value={certForm.issuer}
+                          onChange={e => setCertForm({ ...certForm, issuer: e.target.value })}
+                          className="w-full text-xs p-2.5 rounded-lg border border-gray-200 outline-none bg-white focus:ring-1 focus:ring-amber-500"
+                          required
+                        />
+                        <input 
+                          type="text"
+                          placeholder="Năm cấp..."
+                          value={certForm.date}
+                          onChange={e => setCertForm({ ...certForm, date: e.target.value })}
+                          className="w-full text-xs p-2.5 rounded-lg border border-gray-200 outline-none bg-white focus:ring-1 focus:ring-amber-500"
+                          required
+                        />
+                      </div>
+
+                      <input 
+                        type="text"
+                        placeholder="Người đại diện ký xác minh số..."
+                        value={certForm.signedBy}
+                        onChange={e => setCertForm({ ...certForm, signedBy: e.target.value })}
+                        className="w-full text-xs p-2.5 rounded-lg border border-gray-200 outline-none bg-white focus:ring-1 focus:ring-amber-500"
+                      />
+
+                      <div className="flex gap-2">
+                        <button type="submit" className="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-2 rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer">
+                          <Save className="w-3.5 h-3.5" /> Lưu Chứng Chỉ
+                        </button>
+                        {certForm.id && (
+                          <button 
+                            type="button" 
+                            onClick={() => setCertForm({ id: '', title: '', issuer: '', signedBy: '', status: 'Chứng chỉ đã được xác thực chữ ký số', date: 'Năm cấp: 2026', pdfUrl: '' })}
+                            className="bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-bold px-3 py-2 rounded-lg"
+                          >
+                            Hủy
+                          </button>
+                        )}
+                      </div>
                     </form>
                   )}
 
-                  {certificates.map((cert) => (
-                    <div key={cert.id} className="border border-gray-100 rounded-2xl p-4 bg-gray-50/40 relative group flex flex-col justify-between sm:flex-row sm:items-center gap-4">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-1.5">
-                          <CheckCircle2 className="w-4 h-4 text-green-500" />
-                          <h4 className="text-xs font-bold text-gray-800">{cert.title}</h4>
+                  {/* Danh sách các Chứng Chỉ hiển thị thực tế */}
+                  <div className="space-y-3">
+                    {certificates.map((cert) => (
+                      <div key={cert.id} className="p-4 rounded-xl border border-gray-100 bg-white hover:shadow-md transition-all relative group">
+                        {/* Admin controls */}
+                        {isAdminMode && (
+                          <div className="absolute top-3 right-3 flex gap-1.5 z-10 opacity-80 group-hover:opacity-100 transition-opacity">
+                            <button 
+                              onClick={() => setCertForm({ ...cert })}
+                              className="p-1 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteCert(cert.id)}
+                              className="p-1 rounded bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] font-mono text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                            {cert.date}
+                          </span>
+                          <span className="text-[10px] text-green-600 font-semibold flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3" /> Chữ ký số hợp lệ
+                          </span>
                         </div>
-                        <p className="text-[11px] text-gray-500 pl-5">{cert.issuer} • <span className="text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded font-medium">{cert.date}</span></p>
-                        <p className="text-[10px] text-gray-400 pl-5 italic">{cert.signedBy}</p>
+                        <h4 className="text-xs font-bold text-gray-900 mt-1 pr-16">{cert.title}</h4>
+                        <p className="text-[11px] text-gray-500 mt-0.5">Cơ quan cấp: {cert.issuer}</p>
+                        
+                        <div className="mt-3 pt-2.5 border-t border-dashed border-gray-100 flex items-center justify-between text-[11px]">
+                          <span className="text-gray-400 italic">Xác nhận ký: {cert.signedBy}</span>
+                          {cert.pdfUrl ? (
+                            <a 
+                              href={cert.pdfUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-blue-500 hover:text-blue-600 font-bold flex items-center gap-1 transition-colors"
+                            >
+                              Xem PDF Gốc <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          ) : (
+                            <button 
+                              onClick={() => alert('Vui lòng bật Admin Mode và tải lên tệp PDF của anh.')}
+                              className="text-gray-400 hover:text-gray-600 font-medium flex items-center gap-1 transition-colors"
+                            >
+                              Chưa có tệp <ExternalLink className="w-3 h-3" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* CONSULTATION FORM TAB */}
+              {activeTab === 'consultation' && (
+                <div>
+                  {!formSubmitted ? (
+                    <form onSubmit={handleFormSubmit} className="space-y-4">
+                      <p className="text-xs text-gray-500 leading-relaxed mb-1">
+                        Hãy cung cấp thông tin sơ bộ về dự án cần điều phối để tôi liên hệ và chuẩn bị các giải pháp kỹ thuật, phân tích va chạm phù hợp nhất.
+                      </p>
+
+                      <div>
+                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Họ và Tên / Đơn vị đề xuất</label>
+                        <input 
+                          type="text" 
+                          required
+                          value={fittingForm.name}
+                          onChange={(e) => setFittingForm({ ...fittingForm, name: e.target.value })}
+                          placeholder="Họ tên đối tác hoặc đơn vị yêu cầu..." 
+                          className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                        />
                       </div>
 
-                      <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                        {isAdminMode && (
-                          <button onClick={() => handleDeleteCert(cert.id)} className="p-1.5 rounded bg-red-50 text-red-600">
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                        <a 
-                          href={cert.pdfUrl}
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-sm"
-                        >
-                          Xem PDF <ExternalLink className="w-3 h-3" />
-                        </a>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Số điện thoại liên lạc</label>
+                          <input 
+                            type="tel" 
+                            required
+                            value={fittingForm.phone}
+                            onChange={(e) => setFittingForm({ ...fittingForm, phone: e.target.value })}
+                            placeholder="Số di động liên hệ..." 
+                            className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Địa chỉ Email</label>
+                          <input 
+                            type="email" 
+                            required
+                            value={fittingForm.email}
+                            onChange={(e) => setFittingForm({ ...fittingForm, email: e.target.value })}
+                            placeholder="vi-du@domain.com" 
+                            className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                          />
+                        </div>
                       </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Hạng mục phối hợp chính</label>
+                          <select 
+                            value={fittingForm.projectType}
+                            onChange={(e) => setFittingForm({ ...fittingForm, projectType: e.target.value })}
+                            className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
+                          >
+                            <option value="Architectural BIM">BIM Thiết Kế Kiến Trúc</option>
+                            <option value="Structural BIM">BIM Tính Toán Kết Cấu</option>
+                            <option value="MEP Coordination">BIM Hệ Thống Cơ Điện MEP</option>
+                            <option value="Parametric Families">Dựng Thư Viện Revit Families</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Cấp độ thông tin hình học</label>
+                          <select 
+                            value={fittingForm.lodRequired}
+                            onChange={(e) => setFittingForm({ ...fittingForm, lodRequired: e.target.value })}
+                            className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
+                          >
+                            <option value="LOD 300">LOD 300 (Thiết kế phác thảo)</option>
+                            <option value="LOD 350">LOD 350 (Hồ sơ kỹ thuật)</option>
+                            <option value="LOD 400">LOD 400 (Chế tạo & Thi công)</option>
+                            <option value="LOD 500">LOD 500 (Vận hành As-Built)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Nội dung yêu cầu chi tiết (Không bắt buộc)</label>
+                        <textarea 
+                          rows={2}
+                          value={fittingForm.notes}
+                          onChange={(e) => setFittingForm({ ...fittingForm, notes: e.target.value })}
+                          placeholder="Mô tả quy mô diện tích sàn, số tầng hoặc các điểm giao thoa phức tạp cần giải quyết..." 
+                          className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none" 
+                        />
+                      </div>
+
+                      <button 
+                        type="submit"
+                        disabled={formLoading}
+                        className="w-full flex items-center justify-center gap-2 p-3.5 bg-blue-600 text-white font-bold text-xs rounded-xl hover:bg-blue-700 transition-colors cursor-pointer"
+                      >
+                        {formLoading ? 'Đang gửi thông tin...' : 'Xác Nhận Yêu Cầu Gặp Trao Đổi'}
+                        <Send className="w-3.5 h-3.5" />
+                      </button>
+                    </form>
+                  ) : (
+                    <div className="text-center py-6 space-y-4">
+                      <div className="inline-flex items-center justify-center w-12 h-12 bg-green-50 text-green-500 rounded-full border border-green-100">
+                        <CheckCircle2 className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-gray-900">Tiếp Nhận Đăng Ký Thành Công</h4>
+                        <p className="text-xs text-gray-500 mt-1 max-w-xs mx-auto leading-relaxed">
+                          Cảm ơn bạn, <strong>{fittingForm.name}</strong>. Tôi đã ghi nhận yêu cầu triển khai {fittingForm.projectType} ở mức độ {fittingForm.lodRequired}. Tôi sẽ liên hệ gửi phương án sơ bộ cho bạn qua Email trong vòng 24 giờ tới.
+                        </p>
+                      </div>
+                      <button 
+                        onClick={resetFittingForm}
+                        className="text-xs text-blue-500 hover:underline font-bold"
+                      >
+                        Gửi một yêu cầu điều phối khác
+                      </button>
                     </div>
-                  ))}
+                  )}
                 </div>
               )}
 
             </div>
+
+            {/* Panel Footer */}
+            <div className="p-4 bg-gray-50 border-t border-gray-100 text-center">
+              <p className="text-[10px] text-gray-400">
+                Chuyên viên điều phối mô hình thông tin công trình BIM - Trần Minh Hiếu.
+              </p>
+            </div>
+
           </div>
         </div>
       )}
 
-      {/* Admin Pass Logic Popup */}
+      {/* Admin Mode Passcode Dialog Modal */}
       {showAdminLogin && (
-        <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <form onSubmit={handleAdminLogin} className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 w-full max-w-xs space-y-4">
-            <div className="flex items-center gap-2 text-amber-600">
-              <Lock className="w-5 h-5" />
-              <h3 className="text-sm font-bold text-gray-900">Xác thực quyền quản trị</h3>
-            </div>
-            <input 
-              type="password"
-              placeholder="Nhập mật khẩu..."
-              value={adminPassword}
-              onChange={e => setAdminPassword(e.target.value)}
-              className="w-full text-xs p-2.5 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-amber-500"
-              required
-              autoFocus
-            />
-            <div className="flex gap-2 text-xs font-bold">
-              <button type="submit" className="flex-1 bg-amber-600 text-white py-2 rounded-lg">Đăng Nhập</button>
-              <button type="button" onClick={() => { setShowAdminLogin(false); setAdminPassword(''); }} className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg">Hủy</button>
-            </div>
-          </form>
+        <div className="absolute inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white p-6 rounded-2xl w-full max-w-xs shadow-2xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
+            <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-1.5 justify-center">
+              <Lock className="w-4 h-4 text-amber-500" /> Xác Minh Quyền Quản Trị
+            </h4>
+            <p className="text-[11px] text-gray-500 text-center mb-4 leading-relaxed">
+              Nhập mật khẩu quản trị cá nhân của anh Hiếu để kích hoạt quyền tải lên và hiệu chỉnh các danh mục động.
+            </p>
+            <form onSubmit={handleAdminLogin} className="space-y-3">
+              <input 
+                type="password"
+                required
+                value={adminPassword}
+                onChange={e => setAdminPassword(e.target.value)}
+                placeholder="Mật khẩu (mặc định: hieu123)"
+                className="w-full text-xs p-3 rounded-xl border border-gray-200 outline-none focus:ring-1 focus:ring-blue-500 text-center font-mono tracking-widest"
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <button 
+                  type="submit"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2.5 rounded-xl transition-colors cursor-pointer"
+                >
+                  Đăng Nhập
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setShowAdminLogin(false);
+                    setAdminPassword('');
+                  }}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs py-2.5 px-4 rounded-xl font-bold"
+                >
+                  Hủy
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
     </div>
   );
 }
+
