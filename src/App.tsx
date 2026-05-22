@@ -45,12 +45,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans antialiased selection:bg-blue-500 selection:text-white">
+    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans antialiased selection:bg-blue-500 selection:text-white relative">
       
-      {/* THANH ĐIỀU HƯỚNG (NAVBAR) */}
+      {/* THANH ĐIỀU HƯỚNG (NAVBAR) - Cố định ở trên */}
       <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-50 px-4 py-3 shadow-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          {/* Logo Sở Xây Dựng Cà Mau */}
+          {/* Logo Sở Xây Dựng Cà Mau (Cần thay bằng logo SVG thực tế) */}
           <div className="flex items-center space-x-2">
             <div className="bg-red-500 text-white text-[10px] font-bold p-1 rounded-md leading-tight text-center">
               SỞ XÂY DỰNG<br/>CÀ MAU
@@ -63,78 +63,65 @@ export default function App() {
 
           {/* Các nút Tab chức năng */}
           <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-xl text-xs font-bold">
-            <button 
-              onClick={() => setActiveTab('home')} 
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'home' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
-            >
-              Hồ Sơ
-            </button>
-            <button 
-              onClick={() => setActiveTab('projects')} 
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'projects' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
-            >
-              Dự Án
-            </button>
-            <button 
-              onClick={() => setActiveTab('process')} 
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'process' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
-            >
-              Quy Trình
-            </button>
-            <button 
-              onClick={() => setActiveTab('certs')} 
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'certs' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
-            >
-              Chứng Chỉ
-            </button>
+            {['home', 'projects', 'process', 'certs'].map((tab) => (
+              <button 
+                key={tab}
+                onClick={() => setActiveTab(tab as any)} 
+                className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === tab ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
+              >
+                {tab === 'home' ? 'Hồ Sơ' : tab === 'projects' ? 'Dự Án' : tab === 'process' ? 'Quy Trình' : 'Chứng Chỉ'}
+              </button>
+            ))}
           </div>
         </div>
       </nav>
 
       {/* NỘI DUNG CHÍNH (THAY ĐỔI THEO TAB) */}
-      <main className="pt-24 pb-16 max-w-6xl mx-auto px-4">
+      <main className="pt-24 pb-16 max-w-6xl mx-auto px-4 z-10 relative">
         
-        {/* TAB 1: HỒ SƠ CHÍNH */}
+        {/* TAB 1: HỒ SƠ CHÍNH - Giao diện gốc chuyên nghiệp */}
         {activeTab === 'home' && (
-          <div className="flex flex-col items-center justify-center text-center py-12 relative min-h-[60vh]">
+          <div className="flex flex-col items-center justify-center text-center py-12 relative min-h-[70vh]">
             
-            {/* Hình ảnh cánh tay Robot ở giữa màn hình */}
-            <div className="w-64 h-64 md:w-80 md:h-80 mb-6 flex items-center justify-center">
+            {/* 1. KHU VỰC CÁNH TAY ROBOT 3D (Ở GIỮA, SẮC NÉT) */}
+            {/* Đây là vị trí đặt hình ảnh cánh tay robot sắc nét của bạn */}
+            <div className="flex justify-center items-center mb-12 relative">
               <img 
-                src="https://images.unsplash.com/photo-1589254065878-42c9da997008?auto=format&fit=crop&q=80&w=600" 
-                alt="BIM Tech" 
-                className="object-contain max-h-full drop-shadow-2xl opacity-90"
+                src="/path-to-your-actual-sharp-hand-image.png" // !!! THAY BẰNG ĐƯỜNG DẪN ẢNH CÁNH TAY SẮC NÉT CỦA BẠN !!!
+                alt="Cánh tay Robot 3D Chuyên Nghiệp" 
+                className="w-full max-w-sm h-auto drop-shadow-2xl opacity-90 object-contain z-10"
               />
+              <div className="absolute -inset-1 bg-gradient-to-t from-gray-50 via-gray-50/10 to-gray-50 z-20"></div> {/* Tạo hiệu ứng mờ nhẹ ở gốc */}
             </div>
 
-            {/* Khung thông tin chứng chỉ và nút xem PDF nhanh (Góc dưới bên trái) */}
-            <div className="md:absolute md:bottom-4 md:left-4 bg-white p-4 rounded-xl shadow-lg border border-gray-100 text-left max-w-xs w-full mt-6 md:mt-0">
-              <p className="text-[10px] text-blue-600 font-bold mb-1 flex items-center">
-                <span className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded mr-1">✓ Xác thực</span> 
+            {/* 2. KHUNG THÔNG TIN CHỨNG CHỈ (GÓC DƯỚI TRÁI, CHUẨN VỊ TRÍ) */}
+            <div className="md:absolute md:bottom-8 md:left-4 bg-white p-5 rounded-2xl shadow-xl border border-gray-100 text-left max-w-sm w-full mt-6 md:mt-0 z-30 transition-transform hover:-translate-y-1">
+              <p className="text-[10px] text-blue-600 font-extrabold mb-1.5 flex items-center">
+                <span className="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-md mr-1.5">✓ Xác thực</span> 
                 Autodesk Certified & BIM Specialist
               </p>
-              <h3 className="text-xs font-bold text-gray-800 mb-3 leading-snug">
+              <h3 className="text-sm font-bold text-gray-900 mb-3.5 leading-snug">
                 Mô hình hóa BIM chuẩn xác & Phối hợp Revit chuyên nghiệp.
               </h3>
               
-              {/* Nút bấm xem PDF gốc - Khách click vào sẽ mở ngay lập tức */}
+              {/* Nút bấm xem PDF gốc - Khách click vào sẽ mở ngay lập tức tab PDF đầu tiên */}
               <a 
                 href={`/${MY_CERTIFICATES[0].fileName}`}
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex w-full justify-center items-center text-[11px] font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-lg transition-colors shadow-sm"
+                className="inline-flex w-full justify-center items-center text-[11px] font-bold text-white bg-blue-600 hover:bg-blue-700 px-3.5 py-2 rounded-xl transition-colors shadow-md"
               >
                 Xem PDF Gốc (Revit Arc) →
               </a>
             </div>
 
-            {/* Nút Liên hệ LinkedIn (Góc dưới bên phải) */}
-            <div className="md:absolute md:bottom-4 md:right-4 mt-4 md:mt-0">
+            {/* 3. NÚT LIÊN HỆ LINKEDIN (GÓC DƯỚI PHẢI, CHUẨN VỊ TRÍ) */}
+            <div className="md:absolute md:bottom-8 md:right-4 mt-6 md:mt-0 z-30">
               <a 
                 href={LINKEDIN_URL}
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-xs font-bold text-white bg-[#0077b5] hover:bg-[#006297] px-4 py-2 rounded-xl transition-colors shadow-md"
+                className="inline-flex items-center text-xs font-bold text-white bg-[#0077b5] hover:bg-[#006297] px-5 py-2.5 rounded-2xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 Kết nối qua LinkedIn
               </a>
@@ -142,6 +129,7 @@ export default function App() {
           </div>
         )}
 
+        {/* CÁC TAB KHÁC (GIỮ NGUYÊN HOẠT ĐỘNG ỔN ĐỊNH) */}
         {/* TAB 2: DỰ ÁN */}
         {activeTab === 'projects' && (
           <div className="py-8 text-center text-gray-500">
