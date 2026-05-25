@@ -59,18 +59,21 @@ export default function App() {
   const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(true);
   const [activeWorkflowStep, setActiveWorkflowStep] = useState<number | null>(null);
   
-  // Trạng thái Chế độ Quản trị
+  // Trạng thái Chế độ Quản trị (Admin Mode)
   const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
   const [adminPassword, setAdminPassword] = useState<string>('');
   const [showAdminLogin, setShowAdminLogin] = useState<boolean>(false);
   const [openPdfUrl, setOpenPdfUrl] = useState<string | null>(null);
 
-  // Đường dẫn liên kết LinkedIn
+  // Biến đếm số lần bấm Logo để mở khóa Admin bí mật
+  const [logoClickCount, setLogoClickCount] = useState<number>(0);
+
+  // Đường dẫn liên kết LinkedIn của anh Hiếu
   const [linkedinUrl, setLinkedinUrl] = useState<string>(() => {
     return localStorage.getItem('hieu_linkedin') || 'https://www.linkedin.com/in/tranminhhieu-bim';
   });
 
-  // Khởi tạo State Dự Án
+  // Khởi tạo danh sách Dự án mặc định
   const [bimProjects, setBimProjects] = useState<BIMProject[]>(() => {
     try {
       const saved = localStorage.getItem('hieu_bim_projects');
@@ -85,28 +88,28 @@ export default function App() {
         category: 'Structural BIM',
         desc: 'Mô hình hóa bê tông cốt thép & kết cấu thép phức tạp. Xử lý lệch cốt dầm sàn và kiểm soát xung đột hệ thống trước khi thi công thực tế tại hiện trường.',
         lod: 'LOD 400',
-        tools: ['Revit Structural', 'Navisworks', 'Dynamo']
+        tools: ['Revit Structural', 'Navisworks Manage', 'Dynamo']
       },
       {
         id: 'parametric-families',
-        name: 'Hệ Thư viện Tham số Revit Families',
+        name: 'Hệ Thư viện Tham số Revit Families Chuẩn hóa',
         category: 'Parametric Design',
         desc: 'Thiết kế thư viện Family thông minh với đầy đủ tham số kích thước, thông tin vật liệu và cấu kiện liên kết giúp tăng tốc 40% quy trình thiết kế.',
         lod: 'LOD 350',
-        tools: ['Revit Family', 'Dynamo Scripting']
+        tools: ['Revit Family Editor', 'Dynamo Scripting']
       },
       {
         id: 'mep-integration',
-        name: 'Tích hợp MEP Nhà máy Công nghiệp',
+        name: 'Tích hợp MEP Nhà máy Công nghiệp & Shop Drawing',
         category: 'MEP Integration',
         desc: 'Mô hình hóa chi tiết hệ thống đường ống kỹ thuật phức tạp (HVAC, PCCC, Cấp thoát nước, Điện) cho nhà xưởng diện tích lớn. Xuất bản vẽ thi công Shop Drawing.',
         lod: 'LOD 400',
-        tools: ['Revit MEP', 'Navisworks Manage']
+        tools: ['Revit MEP', 'Navisworks Manage', 'BIM 360']
       }
     ];
   });
 
-  // Khởi tạo State Chứng Chỉ
+  // Khởi tạo danh sách Chứng chỉ mặc định đã liên kết với tệp tin trong thư mục public
   const [certificates, setCertificates] = useState<Certificate[]>(() => {
     try {
       const saved = localStorage.getItem('hieu_bim_certs');
@@ -116,32 +119,50 @@ export default function App() {
     }
     return [
       {
-        id: 'cert-revit-pro',
-        title: 'Autodesk Certified Professional: Revit for Structural Design',
-        issuer: 'Autodesk Global Certification',
-        signedBy: 'VP Autodesk Learning Services',
-        status: 'Chứng chỉ quốc tế',
-        date: 'Năm cấp: 2024',
-        pdfUrl: 'https://images.autodesk.com/adsk/files/certified_professional_logo.pdf'
+        id: 'cert-revit-arc',
+        title: 'Revit Arc (Thiết kế Kiến trúc nâng cao)',
+        issuer: 'Point Edu',
+        signedBy: 'KTS. Nguyễn Khánh Lâm (Đã xác thực số)',
+        status: 'Chứng chỉ chuyên môn chuẩn hóa',
+        date: 'Năm cấp: 2023',
+        pdfUrl: '/chungchi-revit-arc-autodesk.pdf'
       },
       {
-        id: 'cert-bim-manager',
-        title: 'BIM Modeler & Coordination Specialist',
+        id: 'cert-revit-struc',
+        title: 'Autodesk Certified Professional: Revit for Structural Design',
+        issuer: 'Autodesk Global Certification',
+        signedBy: 'VP Autodesk Learning Services (Xác thực toàn cầu)',
+        status: 'Chứng chỉ quốc tế - Đã ký xác thực bảo mật',
+        date: 'Năm cấp: 2024',
+        pdfUrl: '/chungchi-revit-struc-autodesk.pdf'
+      },
+      {
+        id: 'cert-revit-mep',
+        title: 'Revit MEP (Thiết kế Cơ điện chuyên nghiệp)',
+        issuer: 'Point Edu',
+        signedBy: 'KTS. Nguyễn Khánh Lâm (Đã xác thực số)',
+        status: 'Chứng chỉ chuyên môn kỹ thuật MEP',
+        date: 'Năm cấp: 2023',
+        pdfUrl: '/chungchi-revit-map-autodesk.pdf'
+      },
+      {
+        id: 'cert-bim-specialist',
+        title: 'BIM Modeler & Coordination Specialist Standard',
         issuer: 'Viện Công nghệ & Xây dựng Số (BIM Institute)',
-        signedBy: 'Chủ tịch Hội đồng Khoa học',
-        status: 'Đạt chuẩn kỹ năng hành nghề',
+        signedBy: 'Chủ tịch Hội đồng Khoa học (Đã ký số)',
+        status: 'Đạt chuẩn kỹ năng mô hình hóa cấp độ chuyên sâu',
         date: 'Năm cấp: 2025',
-        pdfUrl: '' // Empty để demo hiển thị "Chưa có tệp"
+        pdfUrl: '' // Để trống nếu chưa có tệp
       }
     ];
   });
 
-  // Đồng bộ hóa dữ liệu (kèm kiểm tra dung lượng để tránh crash trình duyệt)
+  // Bảo vệ bộ nhớ LocalStorage an toàn
   const safeSetLocalStorage = useCallback((key: string, value: string) => {
     try {
       localStorage.setItem(key, value);
     } catch (e) {
-      alert('⚠️ Bộ nhớ trình duyệt sắp đầy (Vượt quá 5MB). Vui lòng sử dụng URL thay vì tải trực tiếp tệp PDF hoặc xóa bớt chứng chỉ cũ.');
+      alert('⚠️ Bộ nhớ trình duyệt sắp đầy. Vui lòng sử dụng URL thay vì tải trực tiếp tệp PDF hoặc xóa bớt chứng chỉ cũ.');
       console.error("QuotaExceededError:", e);
     }
   }, []);
@@ -179,6 +200,20 @@ export default function App() {
     if (videoRef.current) videoRef.current.muted = isVideoMuted;
   }, [isVideoMuted]);
 
+  // Xử lý đếm bấm logo để mở khóa tính năng Admin (Click liên tục 5 lần)
+  const handleLogoClick = () => {
+    const nextCount = logoClickCount + 1;
+    if (nextCount >= 5) {
+      setShowAdminLogin(true);
+      setLogoClickCount(0); // Reset bộ đếm về 0
+    } else {
+      setLogoClickCount(nextCount);
+      // Tự động reset lượt click nếu sau 3 giây không bấm tiếp
+      const timer = setTimeout(() => setLogoClickCount(0), 3000);
+      return () => clearTimeout(timer);
+    }
+  };
+
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (adminPassword === 'hieu123') {
@@ -186,7 +221,7 @@ export default function App() {
       setShowAdminLogin(false);
       setAdminPassword('');
     } else {
-      alert('Sai mật khẩu cấu hình! Vui lòng thử lại.');
+      alert('Mật mã quản trị chưa chính xác! Vui lòng thử lại.');
     }
   };
 
@@ -198,12 +233,13 @@ export default function App() {
         return;
       }
       if (file.size > 3 * 1024 * 1024) {
-        alert('Kích thước tệp quá lớn! Vui lòng tải file dưới 3MB để tối ưu hóa bộ nhớ, hoặc dán đường dẫn URL trực tiếp.');
+        alert('Kích thước tệp quá lớn! Vui lòng tải file dưới 3MB để tối ưu hóa bộ nhớ, hoặc điền URL liên kết trực tuyến.');
         return;
       }
       const reader = new FileReader();
       reader.onloadend = () => {
         setCertForm(prev => ({ ...prev, pdfUrl: reader.result as string }));
+        alert('Đã mã hóa tệp PDF thành công!');
       };
       reader.readAsDataURL(file);
     }
@@ -219,7 +255,6 @@ export default function App() {
         tools: projectForm.tools.split(',').map(t => t.trim())
       } : p));
     } else {
-      // Giải cấu trúc loại bỏ id cũ để không bị ghi đè thuộc tính id mới tạo ra
       const { id: _, ...projectData } = projectForm;
       const newProject: BIMProject = {
         ...projectData,
@@ -240,13 +275,12 @@ export default function App() {
   const handleSaveCert = (e: React.FormEvent) => {
     e.preventDefault();
     if (!certForm.title || !certForm.issuer || !certForm.pdfUrl) {
-      alert('Vui lòng nhập tên chứng chỉ, cơ quan cấp và tệp/link PDF.');
+      alert('Vui lòng điền đầy đủ tiêu đề, cơ quan cấp và tệp hoặc link PDF.');
       return;
     }
     if (certForm.id) {
       setCertificates(prev => prev.map(c => c.id === certForm.id ? certForm : c));
     } else {
-      // Giải cấu trúc loại bỏ id cũ của form để tránh trùng lặp cảnh báo TS
       const { id: _, ...certData } = certForm;
       const newCert: Certificate = {
         ...certData,
@@ -290,7 +324,7 @@ export default function App() {
     setFormSubmitted(false);
   };
 
-  // Các Tabs hệ thống (Bổ sung thêm Tab Contact)
+  // Các danh mục Tab (gồm cả liên hệ dự án)
   const TABS = [
     { id: 'Profile', label: 'Hồ Sơ' },
     { id: 'Projects', label: 'Dự Án' },
@@ -302,24 +336,28 @@ export default function App() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#f0f0ee] font-sans antialiased text-gray-900 selection:bg-blue-100 selection:text-blue-900">
       
-      {/* Background Video (Tối ưu performance) */}
+      {/* Background Video (Tối ưu performance và trải nghiệm) */}
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_215831_c6a8989c-d716-4d8d-8745-e972a2eec711.mp4"
         autoPlay muted loop playsInline preload="auto"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-black/30 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/20 to-black/35 pointer-events-none" />
 
-      {/* Cấu trúc chính */}
+      {/* Cấu trúc giao diện chính */}
       <div className="relative z-10 flex flex-col min-h-screen">
         
         {/* Navigation Bar */}
         <header className="w-full px-4 sm:px-8 pt-4 sm:pt-6">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             
-            {/* Logo/Brand Identity */}
-            <div className="flex items-center gap-3.5 backdrop-blur-md bg-white/95 p-2.5 sm:p-3 rounded-2xl shadow-lg border border-white/40 transition-transform duration-300 hover:scale-[1.02]">
+            {/* Logo Thương Hiệu Nhận Diện - Có Tính Năng "Mật Đạo" */}
+            <div 
+              onClick={handleLogoClick}
+              className="flex items-center gap-3.5 backdrop-blur-md bg-white/95 p-2.5 sm:p-3 rounded-2xl shadow-lg border border-white/40 cursor-pointer select-none active:scale-[0.98] transition-all duration-200"
+              title="Nhấp liên tục 5 lần để đăng nhập Quản trị"
+            >
               <div className="relative shrink-0">
                 <CaMauOfficialLogo />
                 <div className="absolute -bottom-1 -right-1 w-4.5 h-4.5 bg-amber-500 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
@@ -340,7 +378,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Điều hướng Tabs - Tối ưu Mobile cuộn ngang */}
+            {/* Điều hướng Tabs - Vuốt ngang tiện lợi trên thiết bị di động */}
             <nav className="flex items-center gap-2 self-stretch md:self-auto w-full md:w-auto">
               <button 
                 onClick={() => setActiveTab(null)}
@@ -370,7 +408,7 @@ export default function App() {
           </div>
         </header>
 
-        {/* Khu vực Nội dung Hero */}
+        {/* Khu vực Hero Content chính */}
         <main className="flex-1 flex items-end pb-24 sm:pb-28 lg:pb-32 px-6 sm:px-12 md:px-20 lg:px-28">
           <section className="max-w-md backdrop-blur-xl bg-white/85 p-6 sm:p-8 rounded-3xl border border-white/50 shadow-2xl animate-in slide-in-from-bottom-8 duration-700 ease-out">
             
@@ -416,30 +454,25 @@ export default function App() {
           </section>
         </main>
 
-        {/* Các nút Controls (Bottom Left & Right) */}
-        <div className="absolute bottom-6 left-6 sm:left-12 flex items-center gap-2 z-20">
-          <button 
-            onClick={() => isAdminMode ? setIsAdminMode(false) : setShowAdminLogin(true)}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border shadow-lg backdrop-blur-md active:scale-95 ${
-              isAdminMode 
-                ? 'bg-amber-500/90 text-white border-amber-500 animate-pulse' 
-                : 'bg-white/80 text-gray-700 hover:text-blue-700 hover:bg-white border-white/50'
-            }`}
-          >
-            {isAdminMode ? <Unlock className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-            {isAdminMode ? 'Admin Active' : 'Admin'}
-          </button>
-
-          {isAdminMode && (
+        {/* Cấu hình dữ liệu khi Admin Mode được bật lên từ mật đạo bí mật */}
+        {isAdminMode && (
+          <div className="absolute bottom-6 left-6 sm:left-12 flex items-center gap-2 z-20">
+            <button 
+              onClick={() => setIsAdminMode(false)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-amber-500 text-white border border-amber-600 shadow-lg backdrop-blur-md active:scale-95 transition-all animate-pulse"
+            >
+              <Unlock className="w-4 h-4" /> Thoát Admin
+            </button>
             <button
               onClick={handleDownloadBackup}
               className="flex items-center gap-1.5 bg-green-600/90 backdrop-blur-md text-white px-3 py-2 rounded-xl text-xs font-bold border border-green-500 hover:bg-green-600 transition-all shadow-lg active:scale-95"
             >
-              <Download className="w-4 h-4" /> Data
+              <Download className="w-4 h-4" /> Xuất Data
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
+        {/* Video & Audio Controls */}
         <div className="absolute bottom-6 right-6 sm:right-12 flex items-center gap-2 z-20">
           <button 
             onClick={handleTogglePlay}
@@ -556,7 +589,7 @@ export default function App() {
                         </select>
                       </div>
                       <input 
-                        type="text" placeholder="Công cụ (Revit, Dynamo...)" value={projectForm.tools}
+                        type="text" placeholder="Công cụ (Revit, Navisworks...)" value={projectForm.tools}
                         onChange={e => setProjectForm({ ...projectForm, tools: e.target.value })}
                         className="w-full text-[13px] p-3 rounded-xl border border-gray-200 outline-none bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
                       />
@@ -655,7 +688,7 @@ export default function App() {
                     <div>
                       <h4 className="text-[13px] font-bold text-green-900">Tính Xác Thực Pháp Lý</h4>
                       <p className="text-[13px] text-green-700/90 leading-relaxed mt-1">
-                        Chứng chỉ hành nghề số hóa đều được mã hóa PDF gốc.
+                        Chứng chỉ hành nghề số hóa đều được mã hóa liên kết PDF bảo mật gốc.
                       </p>
                     </div>
                   </div>
@@ -667,7 +700,6 @@ export default function App() {
                       </h4>
                       
                       <div className="p-4 bg-white rounded-xl border border-gray-100 space-y-2 shadow-sm">
-                        {/* Khắc phục lỗi cú pháp biên dịch bằng cách bao bọc nhãn text chứa ký tự so sánh trong Javascript block */}
                         <label className="block text-[11px] font-extrabold text-gray-500 uppercase tracking-wider">
                           {"Tải PDF (< 3MB)"}
                         </label>
